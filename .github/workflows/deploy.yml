@@ -36,7 +36,7 @@ jobs:
 
             cd /projects/holiday-vibes/Infrastructure
 
-            CERT_PATH="/projects/holiday-vibes/Infrastructure/certbot/conf/live/backend.holiday-vibes.vovisim.ru/fullchain.pem"
+            CERT_PATH="/projects/holiday-vibes/Infrastructure/certbot/conf/live/holiday-vibes.vovisim.ru/fullchain.pem"
 
             if [ ! -f "$CERT_PATH" ]; then
               echo "Сертификат не найден — получаем через certbot"
@@ -45,7 +45,7 @@ jobs:
               cp nginx/nginx.init.conf nginx/nginx.conf
 
               docker compose up -d nginx
-              sleep 3
+              sleep 10
 
               docker compose run --rm certbot certonly --webroot \
                 --webroot-path=/var/www/certbot \
