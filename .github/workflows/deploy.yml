@@ -36,14 +36,16 @@ jobs:
 
             cd /projects/holiday-vibes/Infrastructure
 
-            CERT_PATH="/etc/letsencrypt/live/backend.holiday-vibes.vovisim.ru/fullchain.pem"
+            CERT_PATH="/projects/holiday-vibes/Infrastructure/certbot/conf/live/backend.holiday-vibes.vovisim.ru/fullchain.pem"
 
             if [ ! -f "$CERT_PATH" ]; then
               echo "Сертификат не найден — получаем через certbot"
 
+              cp nginx/nginx.conf nginx/nginx.conf.bak
+              cp nginx/nginx.init.conf nginx/nginx.conf
+
               docker compose up -d nginx
-              docker cp nginx/nginx.init.conf $(docker compose ps -q nginx):/etc/nginx/nginx.conf
-              docker compose exec nginx nginx -s reload
+              sleep 3
 
               docker compose run --rm certbot certonly --webroot \
                 --webroot-path=/var/www/certbot \
@@ -53,8 +55,9 @@ jobs:
                 -d holiday-vibes.vovisim.ru \
                 -d backend.holiday-vibes.vovisim.ru
 
+              cp nginx/nginx.conf.bak nginx/nginx.conf
               echo "Сертификаты получены — переключаемся на SSL конфиг"
             fi
 
-          docker compose up -d --force-recreate
+            docker compose up -d --force-recreate
           EOF
