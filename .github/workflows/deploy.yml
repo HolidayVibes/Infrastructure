@@ -35,5 +35,5 @@ jobs:
             fi
 
             cd /projects/holiday-vibes/Infrastructure
-            docker compose up -d
+            docker compose up -d --force-recreate
           EOF
